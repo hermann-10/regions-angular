@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, effect, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, tap } from 'rxjs';
 import Region, { RegionDTO } from './../interfaces/region';
@@ -9,6 +9,10 @@ import Region, { RegionDTO } from './../interfaces/region';
 export class RegionsService {
 
   private REGIONS_URL ='https://geo.api.gouv.fr/regions?fields=nom,code';
+  selectedRegionSig = signal<Region>({ Code: '-1', Name: ''});
+  private departementsEffect = effect(()=> {
+    console.log(this.selectedRegionSig())
+  })
   http = inject(HttpClient)
 
   getRegions(): Observable<Region[]>{
