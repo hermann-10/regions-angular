@@ -1,14 +1,15 @@
-import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, effect, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { RegionsService } from './services/regions.service';
 import { CommonModule } from '@angular/common';
 import { Observable, Subscription, tap } from 'rxjs';
 import Region from './interfaces/region';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule],
+  imports: [RouterOutlet, CommonModule, FormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -31,7 +32,12 @@ export class AppComponent implements OnInit, OnDestroy {
   regionService = inject(RegionsService);
   selectedRegionSig = this.regionService.selectedRegionSig;
   subscription!: Subscription;
-  regionDepartmentsSig = this.regionService.regionDepartmentsSig
+  regionDepartmentsSig = this.regionService.regionDepartmentsSig;
+  filterBySig = signal<string>('');
+
+  filterEffect = effect(() => {
+    console.log(this.filterBySig().toLocaleLowerCase())
+  })
 
   selectRegion(region: Region){
     this.selectedRegionSig.set(region);

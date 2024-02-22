@@ -173,6 +173,16 @@
     <div class="left-side">
       <h3>Toutes les régions</h3>
       <p>
+        Filter par région
+        <br>
+        <input
+        type="text"
+        [ngModel]="filterBySig()"
+        (ngModelChange)="filterBySig.set($event)"
+        name="filter"
+        id="filter">
+      </p>
+      <p>
         @for(reg of regionsSig(); track reg.Code){
           <p (click)="selectRegion(reg)" class="region">{{ reg.Name }}</p>
 
