@@ -29,6 +29,10 @@ export class AppComponent implements OnInit, OnDestroy {
   // regions$ = new Observable<Region[]>;
   regionsSig = signal<Region[]>([])
   regionService = inject(RegionsService);
+  selectedRegionSig = signal<Region>({ Code:"-1", Name: ""})
   subscription!: Subscription;
 
+  selectRegion(region: Region){
+    this.selectedRegionSig.set(region);
+  }
 }
