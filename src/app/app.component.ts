@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { Observable, Subscription, debounceTime, distinctUntilChanged, filter, tap } from 'rxjs';
 import Region from './interfaces/region';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import Department from './interfaces/departments';
 
 @Component({
   selector: 'app-root',
@@ -25,8 +26,8 @@ export class AppComponent implements OnInit, OnDestroy {
       .pipe(
       debounceTime(500),
       distinctUntilChanged(),
-      filter(values => values.length > 2),
-      tap((data) => console.log({ departmentFilter: data } )),
+      //filter(values => values.length > 2),
+      tap((data) => this.departmentFilterSig.set(data)),
       )
     .subscribe();
   }
@@ -42,6 +43,19 @@ export class AppComponent implements OnInit, OnDestroy {
   selectedRegionSig = this.regionService.selectedRegionSig;
   subscription!: Subscription;
   departmentSubscription!: Subscription;
+
+  departmentFilterSig = signal<string>('');
+  departmentFiltered: Department[] = [];
+  departmentEffect = effect(() => {
+    this.departmentFiltered = this.regionService
+    .regionDepartmentsSig()
+    .filter((dep: Department) => {
+      return dep.nom
+      .toLocaleLowerCase()
+      .startsWith(this.departmentFilterSig()
+      .toLocaleLowerCase())
+    });
+  });
 
   regionDepartmentsSig = this.regionService.regionDepartmentsSig;
   filterBySig = signal<string>('');
