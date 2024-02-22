@@ -197,6 +197,7 @@
       <h3>Région sélectionné</h3>
       @if(selectedRegionSig().Code !== "-1"){
         <p class="region">Région <b>{{ selectedRegionSig().Name}}</b></p>
+        <input type="text" [formControl]="textControl" name="" id="">
         <ul>
           @for (dep of regionDepartmentsSig(); track dep.code) {
             <li>{{ dep.nom }} {{ dep.code }}</li>
