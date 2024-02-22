@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, effect, inject, signal } from '@angular/c
 import { RouterOutlet } from '@angular/router';
 import { RegionsService } from './services/regions.service';
 import { CommonModule } from '@angular/common';
-import { Observable, Subscription, tap } from 'rxjs';
+import { Observable, Subscription, debounceTime, distinctUntilChanged, filter, tap } from 'rxjs';
 import Region from './interfaces/region';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -22,7 +22,12 @@ export class AppComponent implements OnInit, OnDestroy {
     .subscribe();
 
     this.departmentSubscription = this.textControl.valueChanges
-      .pipe(tap((data) => console.log({ departmentFilter: data } )))
+      .pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      filter(values => values.length > 2),
+      tap((data) => console.log({ departmentFilter: data } )),
+      )
     .subscribe();
   }
 
