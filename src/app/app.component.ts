@@ -27,8 +27,8 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   title = 'regions';
-  // regions$ = new Observable<Region[]>;
   regionsSig = signal<Region[]>([])
+  regions: Region[] = [] ;
   regionService = inject(RegionsService);
   selectedRegionSig = this.regionService.selectedRegionSig;
   subscription!: Subscription;
@@ -36,8 +36,23 @@ export class AppComponent implements OnInit, OnDestroy {
   filterBySig = signal<string>('');
 
   filterEffect = effect(() => {
-    console.log(this.filterBySig().toLocaleLowerCase())
-  })
+    console.log(this.filterBySig().toLocaleLowerCase());
+    // if(this.filterBySig() === ''){
+    //   this.resetRegions();
+    //   return;
+    // }
+
+    this.regions = this.regionsSig().filter((reg) =>
+    reg.Name.toLocaleLowerCase().startsWith(
+      this.filterBySig().toLocaleLowerCase()
+    )
+    );
+    console.log({ filteredRegions: this.regions });
+  });
+
+  // resetRegions(){
+  //   this.regions = this.regionsSig();
+  // }
 
   selectRegion(region: Region){
     this.selectedRegionSig.set(region);

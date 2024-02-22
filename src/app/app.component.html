@@ -183,9 +183,8 @@
         id="filter">
       </p>
       <p>
-        @for(reg of regionsSig(); track reg.Code){
+        @for(reg of regions; track reg.Code){
           <p (click)="selectRegion(reg)" class="region">{{ reg.Name }}</p>
-
         }@empty {
           <p>Aucune région</p>
         }
